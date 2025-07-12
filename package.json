@@ -1,5 +1,5 @@
 {
-  "name": "cambio-mutum-clean",
+  "name": "cambio-mutum",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,7 @@
     "node-binance-api": "^1.0.0"
   },
   "devDependencies": {
-    "vite": "^4.7.0",
-    "@vitejs/plugin-react": "^4.0.0"
+    "@vitejs/plugin-react": "^4.0.0",
+    "vite": "^4.4.9"
   }
 }
