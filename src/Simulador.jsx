@@ -1,13 +1,8 @@
-useEffect(() => {
-  async function obtenerSaldo() {
-    try {
-      const res = await fetch('/api/saldo');
-      const data = await res.json();
-      console.log('Saldo Binance:', data.usdt);
-    } catch (error) {
-      console.error('Error al obtener saldo:', error);
-    }
-  }
+// src/Simulador.jsx
+import React from 'react';
 
-  obtenerSaldo();
-}, []);
+function Simulador() {
+  return <div>Simulador funcionando</div>;
+}
+
+export default Simulador;

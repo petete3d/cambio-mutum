@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enviar Dinero</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #e6f2ff;
+      text-align: center;
+    }
+    input, button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      font-size: 16px;
+      width: 90%;
+      max-width: 300px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Enviar Dinero</h2>
+  <input type="text" placeholder="Nombre del destinatario" />
+  <input type="number" placeholder="Monto en R$" />
+  <button onclick="irConfirmacion()">Continuar</button>
+
+  <script>
+    function irConfirmacion() {
+      window.location.href = "confirmacion.html";
+    }
+  </script>
+</body>
+</html>

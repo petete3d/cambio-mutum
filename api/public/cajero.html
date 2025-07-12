@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pantalla del Cajero</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0fff0;
+      padding: 30px;
+      text-align: center;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>👨‍💻 Panel del Cajero</h2>
+  <p>Aquí aparecerán las órdenes asignadas.</p>
+  <button onclick="volverAdmin()">Volver al Admin</button>
+
+  <script>
+    function volverAdmin() {
+      window.location.href = "admin.html";
+    }
+  </script>
+</body>
+</html>

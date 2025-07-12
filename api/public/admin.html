@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Admin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 20px;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      background-color: #343a40;
+      color: white;
+      border: none;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h2>👨‍💼 Panel de Administrador</h2>
+  <p>Aquí se muestran las transacciones del día.</p>
+  <button onclick="irCajero()">Ir al Cajero</button>
+
+  <script>
+    function irCajero() {
+      window.location.href = "cajero.html";
+    }
+  </script>
+</body>
+</html>

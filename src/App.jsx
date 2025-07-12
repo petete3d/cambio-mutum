@@ -1,8 +1,18 @@
-export default function App() {
+// src/App.jsx
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import RegistroCliente from './RegistroCliente';
+import Simulador from './Simulador';
+
+function App() {
   return (
-    <div style={{ padding: '2rem', textAlign: 'center' }}>
-      <h1>¡Cambio Mutum funciona!</h1>
-      <p>Si ves este mensaje, la app está funcionando bien.</p>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<RegistroCliente />} />
+        <Route path="/simulador" element={<Simulador />} />
+      </Routes>
+    </Router>
   );
 }
+
+export default App;
