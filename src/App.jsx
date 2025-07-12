@@ -1,8 +1,8 @@
-import React from 'react'
-import Simulador from './Simulador'
-
 export default function App() {
   return (
-    <Simulador />
-  )
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <h1>¡Cambio Mutum funciona!</h1>
+      <p>Si ves este mensaje, la app está funcionando bien.</p>
+    </div>
+  );
 }
