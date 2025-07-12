@@ -1,8 +1,16 @@
-// src/Simulador.jsx
-import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Simulador from './Simulador';
+// importa otras páginas si es necesario
 
-function Simulador() {
-  return <div>Simulador funcionando</div>;
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/simulador" element={<Simulador />} />
+        {/* otras rutas */}
+      </Routes>
+    </Router>
+  );
 }
 
-export default Simulador;
+export default App;
