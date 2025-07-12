@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Panel de Admin</title>
   <style>
     body {
@@ -10,6 +10,19 @@
       background-color: #f9f9f9;
       padding: 20px;
       text-align: center;
+    }
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    th {
+      background-color: #343a40;
+      color: white;
     }
     button {
       padding: 10px 20px;
@@ -24,9 +37,62 @@
 <body>
   <h2>👨‍💼 Panel de Administrador</h2>
   <p>Aquí se muestran las transacciones del día.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Monto</th>
+        <th>Cajero</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-transacciones">
+      <!-- Aquí se insertarán las filas dinámicamente -->
+    </tbody>
+  </table>
+
   <button onclick="irCajero()">Ir al Cajero</button>
 
-  <script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabase = createClient(
+      'https://axflkwohcjsskxqvtqzs.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Zmxrd29oY2pzc2t4cXZ0cXpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NTE5NDcsImV4cCI6MjA2NzIyNzk0N30.JkFd0JrKKMGfK64jkFqaAKzN2YApEnj70D5XwJE4Mng'
+    );
+
+    async function cargarTransacciones() {
+      const { data, error } = await supabase
+        .from('transacciones')
+        .select('*')
+        .order('id', { ascending: false });
+
+      if (error) {
+        console.error('Error cargando transacciones:', error);
+        return;
+      }
+
+      const tabla = document.getElementById('tabla-transacciones');
+      tabla.innerHTML = ''; // limpiar
+
+      data.forEach((transaccion) => {
+        const fila = `
+          <tr>
+            <td>${transaccion.id}</td>
+            <td>${transaccion.cliente || '-'}</td>
+            <td>${transaccion.monto || '0.00'}</td>
+            <td>${transaccion.cajero || 'No asignado'}</td>
+            <td>${new Date(transaccion.fecha).toLocaleString()}</td>
+          </tr>
+        `;
+        tabla.insertAdjacentHTML('beforeend', fila);
+      });
+    }
+
+    cargarTransacciones();
+
     function irCajero() {
       window.location.href = "cajero.html";
     }
