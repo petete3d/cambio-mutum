@@ -1,42 +1,101 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enviar Dinero</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enviar Dinero - Cambio Mutum</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #e8f0fe;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
       padding: 30px;
-      background: #e6f2ff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+    }
+    h2 {
+      margin-bottom: 20px;
       text-align: center;
     }
     input, button {
-      display: block;
-      margin: 10px auto;
+      width: 100%;
       padding: 10px;
+      margin-bottom: 15px;
       font-size: 16px;
-      width: 90%;
-      max-width: 300px;
     }
     button {
       background-color: #007bff;
       color: white;
       border: none;
       border-radius: 6px;
+      cursor: pointer;
+    }
+    .mensaje {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h2>Enviar Dinero</h2>
-  <input type="text" placeholder="Nombre del destinatario" />
-  <input type="number" placeholder="Monto en R$" />
-  <button onclick="irConfirmacion()">Continuar</button>
+  <div class="container">
+    <h2>Enviar Dinero</h2>
+    <input type="text" id="cpf" placeholder="Tu CPF (cliente)" />
+    <input type="text" id="nombre_destinatario" placeholder="Nombre del destinatario" />
+    <input type="text" id="cedula_destinatario" placeholder="Cédula del destinatario" />
+    <input type="text" id="telefono_destinatario" placeholder="Teléfono del destinatario" />
+    <input type="number" id="monto_brl" placeholder="Monto a enviar en Reais" />
+    <button onclick="enviarDinero()">Enviar</button>
+    <div class="mensaje" id="mensaje"></div>
+  </div>
 
-  <script>
-    function irConfirmacion() {
-      window.location.href = "confirmacion.html";
-    }
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabaseUrl = 'https://phtctpfgvngzasbcfrhf.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBodGN0cGZnbmdaYXNiY2ZyaGYiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY5Njg1MDAzNCwiZXhwIjoxOTEyNDI2MDM0fQ.K81sK8dUJjV0CzRWfxvtErxmpURdFbQjTUsThtVNDlI';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    window.enviarDinero = async function () {
+      const cpf = document.getElementById('cpf').value.trim();
+      const nombre = document.getElementById('nombre_destinatario').value.trim();
+      const cedula = document.getElementById('cedula_destinatario').value.trim();
+      const telefono = document.getElementById('telefono_destinatario').value.trim();
+      const monto_brl = parseFloat(document.getElementById('monto_brl').value);
+
+      const mensaje = document.getElementById('mensaje');
+
+      if (!cpf || !nombre || !cedula || !telefono || !monto_brl || monto_brl <= 0) {
+        mensaje.innerText = '⚠️ Por favor completa todos los campos correctamente.';
+        return;
+      }
+
+      const { error } = await supabase.from('envios').insert([
+        {
+          cpf,
+          nombre_destinatario: nombre,
+          cedula_destinatario: cedula,
+          telefono_destinatario: telefono,
+          monto_brl
+        }
+      ]);
+
+      if (error) {
+        mensaje.innerText = '❌ Error al registrar el envío.';
+        console.error(error);
+      } else {
+        mensaje.innerText = '✅ Envío registrado correctamente.';
+        document.querySelectorAll('input').forEach(i => i.value = '');
+      }
+    };
   </script>
 </body>
 </html>

@@ -3,48 +3,97 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registro de Cliente</title>
+  <title>Registro Cambio Mutum</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f3f3f3;
+      background: #f4f4f4;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      padding: 40px;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
     }
     h1 {
-      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 22px;
     }
-    input, button {
-      padding: 10px;
-      margin: 10px;
+    input {
       width: 100%;
-      max-width: 300px;
+      padding: 10px;
+      margin-bottom: 15px;
       font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
     button {
+      width: 100%;
+      padding: 10px;
       background-color: #28a745;
       color: white;
+      font-size: 16px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
     }
+    .mensaje {
+      text-align: center;
+      margin-top: 10px;
+      color: red;
+    }
   </style>
 </head>
 <body>
-  <h1>Registro de Cliente</h1>
-  <input type="text" placeholder="Nombre" />
-  <input type="tel" placeholder="Teléfono" />
-  <input type="email" placeholder="Email" />
-  <input type="password" placeholder="Contraseña" />
-  <input type="password" placeholder="Confirmar Contraseña" />
-  <button onclick="irEnvios()">Registrar y Continuar</button>
+  <div class="container">
+    <h1>Registro Cliente</h1>
+    <input type="text" id="nombre" placeholder="Nombre completo" />
+    <input type="text" id="telefono" placeholder="Teléfono" />
+    <input type="email" id="correo" placeholder="Correo electrónico" />
+    <button onclick="registrarCliente()">Registrarse</button>
+    <div class="mensaje" id="mensaje"></div>
+  </div>
 
-  <script>
-    function irEnvios() {
-      window.location.href = "envios.html";
-    }
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const supabaseUrl = "https://axflkwohcjsskxqvtqzs.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Zmxrd29oY2pzc2t4cXZ0cXpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NTE5NDcsImV4cCI6MjA2NzIyNzk0N30.JkFd0JrKKMGfK64jkFqaAKzN2YApEnj70D5XwJE4Mng";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    window.registrarCliente = async function () {
+      const nombre = document.getElementById("nombre").value.trim();
+      const telefono = document.getElementById("telefono").value.trim();
+      const correo = document.getElementById("correo").value.trim();
+      const mensaje = document.getElementById("mensaje");
+
+      if (!nombre || !telefono || !correo) {
+        mensaje.textContent = "Por favor completa todos los campos.";
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("clientes")
+        .insert([{ nombre, telefono, correo }]);
+
+      if (error) {
+        console.error("Error Supabase:", error.message);
+        mensaje.textContent = "Error al registrar. Intenta de nuevo.";
+        return;
+      }
+
+      mensaje.textContent = "✅ Registro exitoso. Redirigiendo...";
+      setTimeout(() => {
+        window.location.href = "envios.html";
+      }, 1500);
+    };
   </script>
 </body>
 </html>
