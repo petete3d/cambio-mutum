@@ -26,11 +26,12 @@
     }
     button {
       padding: 10px 20px;
-      margin-top: 20px;
+      margin: 10px;
       background-color: #343a40;
       color: white;
       border: none;
       border-radius: 6px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -48,11 +49,10 @@
         <th>Fecha</th>
       </tr>
     </thead>
-    <tbody id="tabla-transacciones">
-      <!-- Aquí se insertarán las filas dinámicamente -->
-    </tbody>
+    <tbody id="tabla-transacciones"></tbody>
   </table>
 
+  <button onclick="insertarPruebas()">➕ Insertar Pruebas</button>
   <button onclick="irCajero()">Ir al Cajero</button>
 
   <script type="module">
@@ -75,16 +75,16 @@
       }
 
       const tabla = document.getElementById('tabla-transacciones');
-      tabla.innerHTML = ''; // limpiar
+      tabla.innerHTML = '';
 
-      data.forEach((transaccion) => {
+      data.forEach((t) => {
         const fila = `
           <tr>
-            <td>${transaccion.id}</td>
-            <td>${transaccion.cliente || '-'}</td>
-            <td>${transaccion.monto || '0.00'}</td>
-            <td>${transaccion.cajero || 'No asignado'}</td>
-            <td>${new Date(transaccion.fecha).toLocaleString()}</td>
+            <td>${t.id}</td>
+            <td>${t.cliente || '-'}</td>
+            <td>${t.monto || '0.00'}</td>
+            <td>${t.cajero || 'No asignado'}</td>
+            <td>${new Date(t.fecha).toLocaleString()}</td>
           </tr>
         `;
         tabla.insertAdjacentHTML('beforeend', fila);
@@ -96,6 +96,24 @@
     function irCajero() {
       window.location.href = "cajero.html";
     }
+
+    window.insertarPruebas = async function () {
+      const registros = [
+        { cliente: "Luis Pérez", monto: 100, cajero: "Jhonny", fecha: new Date().toISOString() },
+        { cliente: "María Gómez", monto: 250, cajero: "Jhonny", fecha: new Date().toISOString() },
+        { cliente: "Carlos Díaz", monto: 150, cajero: "Jhonny", fecha: new Date().toISOString() },
+      ];
+
+      const { error } = await supabase.from("transacciones").insert(registros);
+
+      if (error) {
+        alert("❌ Error al insertar pruebas");
+        console.error(error);
+      } else {
+        alert("✅ Pruebas insertadas con éxito");
+        cargarTransacciones();
+      }
+    };
   </script>
 </body>
 </html>
