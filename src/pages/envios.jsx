@@ -1,96 +1,108 @@
-// src/pages/Envios.jsx
-import React, { useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+"use client";
+import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 
-// Conexión con Supabase
-const supabase = createClient(
-  'https://axflkwohcjsskxqvtqzs.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Zmxrd29oY2pzc2t4cXZ0cXpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NTE5NDcsImV4cCI6MjA2NzIyNzk0N30.JkFd0JrKKMGfK64jkFqaAKzN2YApEnj70D5XwJE4Mng'
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-const Envios = () => {
-  const [nombre, setNombre] = useState('');
-  const [cedula, setCedula] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [montoBRL, setMontoBRL] = useState('');
-  const [resultado, setResultado] = useState(null);
-  const tasaActual = 240; // Valor de ejemplo, se puede actualizar luego
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error("❌ Variables de entorno de Supabase no definidas.");
+}
 
-  const manejarEnvio = async () => {
-    if (!nombre || !cedula || !montoBRL) {
-      alert('Por favor completa los campos obligatorios.');
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+export default function Envios() {
+  const [nombre, setNombre] = useState("");
+  const [cedula, setCedula] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [monto_brl, setMontoBRL] = useState("");
+  const [mensaje, setMensaje] = useState("");
+
+  const registrarEnvio = async () => {
+    if (!nombre || !cedula || !telefono || !monto_brl) {
+      alert("❌ Todos los campos obligatorios deben estar llenos.");
       return;
     }
 
-    const montoBs = parseFloat(montoBRL) * tasaActual;
-
-    const { data, error } = await supabase
-      .from('envios')
-      .insert([
-        {
-          nombre,
-          cedula,
-          telefono,
-          monto_brl: parseFloat(montoBRL),
-          tasa: tasaActual,
-          monto_bs: montoBs,
-          fecha: new Date()
-        }
-      ]);
+    const { data, error } = await supabase.from("envios").insert([
+      {
+        nombre,
+        cedula,
+        telefono,
+        monto_brl: parseFloat(monto_brl),
+      },
+    ]);
 
     if (error) {
-      console.error(error);
-      alert('❌ Error al registrar el envío');
+      console.error("Error al registrar:", error);
+      alert("❌ Hubo un problema al registrar el envío.");
     } else {
-      setResultado(`✅ Envío registrado. El destinatario recibirá Bs ${montoBs.toFixed(2)}`);
-      setNombre('');
-      setCedula('');
-      setTelefono('');
-      setMontoBRL('');
+      alert("✅ Envío registrado correctamente.");
+      setNombre("");
+      setCedula("");
+      setTelefono("");
+      setMontoBRL("");
     }
   };
 
   return (
-    <div style={{ padding: 20, maxWidth: 400, margin: '0 auto', fontFamily: 'Arial' }}>
-      <h2>📤 Enviar Dinero</h2>
+    <div style={{ padding: "20px", maxWidth: "400px", margin: "auto" }}>
+      <h2>Registrar Envío</h2>
+
       <input
         type="text"
-        placeholder="Nombre del destinatario"
+        placeholder="Nombre"
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
-        style={{ width: '100%', marginBottom: 10 }}
+        style={inputStyle}
       />
+
       <input
         type="text"
-        placeholder="Cédula o documento"
+        placeholder="Cédula"
         value={cedula}
         onChange={(e) => setCedula(e.target.value)}
-        style={{ width: '100%', marginBottom: 10 }}
+        style={inputStyle}
       />
+
       <input
         type="text"
-        placeholder="Teléfono (opcional)"
+        placeholder="Teléfono"
         value={telefono}
         onChange={(e) => setTelefono(e.target.value)}
-        style={{ width: '100%', marginBottom: 10 }}
+        style={inputStyle}
       />
+
       <input
         type="number"
-        placeholder="Monto en Reales (BRL)"
-        value={montoBRL}
+        placeholder="Monto en BRL"
+        value={monto_brl}
         onChange={(e) => setMontoBRL(e.target.value)}
-        style={{ width: '100%', marginBottom: 10 }}
+        style={inputStyle}
       />
-      <button
-        onClick={manejarEnvio}
-        style={{ padding: 10, width: '100%', backgroundColor: '#28a745', color: 'white' }}
-      >
-        Enviar
-      </button>
 
-      {resultado && <p style={{ marginTop: 20 }}>{resultado}</p>}
+      <button onClick={registrarEnvio} style={buttonStyle}>
+        Continuar
+      </button>
     </div>
   );
+}
+
+const inputStyle = {
+  display: "block",
+  width: "100%",
+  padding: "10px",
+  marginBottom: "10px",
+  borderRadius: "6px",
+  border: "1px solid #ccc",
 };
 
-export default Envios;
+const buttonStyle = {
+  backgroundColor: "#28a745",
+  color: "white",
+  padding: "10px",
+  width: "100%",
+  border: "none",
+  borderRadius: "6px",
+  cursor: "pointer",
+};
