@@ -1,14 +1,13 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Simulador from './Simulador';
 import RegistroCliente from './RegistroCliente';
+import Envios from './pages/envios';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Simulador />} />
-        <Route path="/registro" element={<RegistroCliente />} />
+        <Route path="/" element={<RegistroCliente />} />
+        <Route path="/envios" element={<Envios />} />
       </Routes>
     </Router>
   );
