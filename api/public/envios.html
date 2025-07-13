@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enviar Dinero - Cambio Mutum</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Enviar Dinero</h2>
+    <input type="text" id="nombre" placeholder="Nombre del destinatario" />
+    <input type="text" id="cedula" placeholder="Cédula" />
+    <input type="text" id="telefono" placeholder="Teléfono" />
+    <input type="number" id="monto" placeholder="Monto en R$" />
+    <button onclick="enviarDinero()">Enviar</button>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+    const supabaseUrl = "https://jewaryuxrujpsgpoxgoq.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impld2FyeXV4cnVqcHNncG94Z29xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxOTAzOTgsImV4cCI6MjA2Nzc2NjM5OH0.JeuKtSCHqWmu9JsWFr1O0fzdQMnoqH7bDYX2Qkcr2Mk";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    window.enviarDinero = async function () {
+      const nombre = document.getElementById("nombre").value;
+      const cedula = document.getElementById("cedula").value;
+      const telefono = document.getElementById("telefono").value;
+      const monto = parseFloat(document.getElementById("monto").value);
+
+      if (!nombre || !cedula || !telefono || isNaN(monto) || monto <= 0) {
+        alert("Por favor completa todos los campos correctamente.");
+        return;
+      }
+
+      const { error } = await supabase
+        .from("envios")
+        .insert([{ nombre, cedula, telefono, monto }]);
+
+      if (error) {
+        alert("Error al enviar: " + error.message);
+      } else {
+        alert("✅ Envío registrado correctamente");
+        location.reload();
+      }
+    };
+  </script>
+</body>
+</html>
