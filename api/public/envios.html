@@ -4,81 +4,55 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Enviar Dinero - Cambio Mutum</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 90%;
-      max-width: 400px;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      font-size: 16px;
-    }
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-  <div class="container">
-    <h2>Enviar Dinero</h2>
-    <input type="text" id="nombre" placeholder="Nombre del destinatario" />
-    <input type="text" id="cedula" placeholder="Cédula" />
-    <input type="text" id="telefono" placeholder="Teléfono" />
-    <input type="number" id="monto" placeholder="Monto en R$" />
-    <button onclick="enviarDinero()">Enviar</button>
+  <div style="padding: 20px; max-width: 400px; margin: 0 auto; font-family: Arial;">
+    <h2>📤 Enviar Dinero</h2>
+    <input id="nombre" type="text" placeholder="Nombre del destinatario" style="width: 100%; margin-bottom: 10px;" />
+    <input id="cedula" type="text" placeholder="Cédula o documento" style="width: 100%; margin-bottom: 10px;" />
+    <input id="telefono" type="text" placeholder="Teléfono (opcional)" style="width: 100%; margin-bottom: 10px;" />
+    <input id="monto_brl" type="number" placeholder="Monto en Reales (BRL)" style="width: 100%; margin-bottom: 10px;" />
+    <button onclick="registrarEnvio()" style="padding: 10px; width: 100%; background-color: rgb(40, 167, 69); color: white;">Enviar</button>
   </div>
 
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+  <script>
+    const supabaseUrl = 'https://jewaryuxrujpsgpoxgoq.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impld2FyeXV4cnVqcHNncG94Z29xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxOTAzOTgsImV4cCI6MjA2Nzc2NjM5OH0.JeuKtSCHqWmu9JsWFr1O0fzdQMnoqH7bDYX2Qkcr2Mk';
 
-    const supabaseUrl = "https://jewaryuxrujpsgpoxgoq.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impld2FyeXV4cnVqcHNncG94Z29xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxOTAzOTgsImV4cCI6MjA2Nzc2NjM5OH0.JeuKtSCHqWmu9JsWFr1O0fzdQMnoqH7bDYX2Qkcr2Mk";
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    window.enviarDinero = async function () {
+    async function registrarEnvio() {
       const nombre = document.getElementById("nombre").value;
       const cedula = document.getElementById("cedula").value;
       const telefono = document.getElementById("telefono").value;
-      const monto = parseFloat(document.getElementById("monto").value);
+      const monto_brl = parseFloat(document.getElementById("monto_brl").value);
 
-      if (!nombre || !cedula || !telefono || isNaN(monto) || monto <= 0) {
-        alert("Por favor completa todos los campos correctamente.");
+      if (!nombre || !cedula || isNaN(monto_brl)) {
+        alert("❌ Por favor, completa los campos obligatorios.");
         return;
       }
 
-      const { error } = await supabase
-        .from("envios")
-        .insert([{ nombre, cedula, telefono, monto }]);
+      const { error } = await supabase.from('envios').insert([{
+        nombre,
+        cedula,
+        telefono,
+        monto_brl,
+        fecha: new Date()
+      }]);
 
       if (error) {
-        alert("Error al enviar: " + error.message);
+        console.error(error);
+        alert("❌ Error al registrar el envío.");
       } else {
-        alert("✅ Envío registrado correctamente");
-        location.reload();
+        alert("✅ Envío registrado con éxito.");
+        document.getElementById("nombre").value = "";
+        document.getElementById("cedula").value = "";
+        document.getElementById("telefono").value = "";
+        document.getElementById("monto_brl").value = "";
       }
-    };
+    }
   </script>
 </body>
 </html>
+
