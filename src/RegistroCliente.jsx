@@ -8,60 +8,62 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4Zmxrd29oY2pzc2t4cXZ0cXpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2NTE5NDcsImV4cCI6MjA2NzIyNzk0N30.JkFd0JrKKMGfK64jkFqaAKzN2YApEnj70D5XwJE4Mng'
 );
 
-function RegistroCliente() {
+export default function RegistroCliente() {
   const [nombre, setNombre] = useState('');
   const [telefono, setTelefono] = useState('');
-  const [correo, setCorreo] = useState('');
+  const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
-  const registrarCliente = async () => {
-    if (!nombre || !telefono || !correo) {
-      alert('Por favor, completa todos los campos');
+  const registrar = async () => {
+    if (!nombre || !telefono || !email) {
+      alert('Completa todos los campos');
       return;
     }
 
-    const { error } = await supabase.from('clientes').insert([
+    const { data, error } = await supabase.from('clientes').insert([
       {
         nombre,
         telefono,
-        correo,
-      },
+        email
+      }
     ]);
+
+    console.log("Datos enviados:", { nombre, telefono, email });
+    console.log("Respuesta Supabase:", { data, error });
 
     if (error) {
       alert('Error al registrar cliente');
-      console.error(error);
     } else {
-      navigate('/envios'); // redirige al terminar
+      alert('Cliente registrado correctamente');
+      navigate('/envios'); // Ruta JSX (no HTML)
     }
   };
 
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
       <h2>Registro de Cliente</h2>
-      <div>
-        <input
-          type="text"
-          placeholder="Nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-        /><br /><br />
-        <input
-          type="text"
-          placeholder="Teléfono"
-          value={telefono}
-          onChange={(e) => setTelefono(e.target.value)}
-        /><br /><br />
-        <input
-          type="email"
-          placeholder="Correo"
-          value={correo}
-          onChange={(e) => setCorreo(e.target.value)}
-        /><br /><br />
-        <button onClick={registrarCliente}>Registrarme</button>
-      </div>
+      <input
+        type="text"
+        placeholder="Nombre"
+        value={nombre}
+        onChange={e => setNombre(e.target.value)}
+        style={{ display: 'block', marginBottom: '10px' }}
+      />
+      <input
+        type="text"
+        placeholder="Teléfono"
+        value={telefono}
+        onChange={e => setTelefono(e.target.value)}
+        style={{ display: 'block', marginBottom: '10px' }}
+      />
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        style={{ display: 'block', marginBottom: '10px' }}
+      />
+      <button onClick={registrar}>Continuar</button>
     </div>
   );
 }
-
-export default RegistroCliente;
