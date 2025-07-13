@@ -1,0 +1,55 @@
+.registro-bg {
+  background-image: url('https://images.unsplash.com/photo-1611078489935-b9637d743a62?auto=format&fit=crop&w=1950&q=80'); /* Bitcoin fondo */
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.registro-card {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.registro-card h2 {
+  margin-bottom: 20px;
+  color: #222;
+}
+
+.registro-card input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.registro-card button {
+  background-color: #f7931a;
+  color: white;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.registro-card button:hover {
+  background-color: #d87c14;
+}
+
+.mensaje {
+  margin-top: 15px;
+  font-weight: bold;
+  color: green;
+}
